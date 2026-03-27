@@ -5,6 +5,10 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { planetsData } from './planetsData.js';
 import { updateHoverUI, hideHoverUI, initSPA_Navigation } from './uiManager.js';
+import { initAudio } from './audioManager.js';
+
+// 初始化背景音乐
+initAudio();
 
 // ---- 1. 基础场景设置 ----
 const container = document.getElementById('canvas-container');

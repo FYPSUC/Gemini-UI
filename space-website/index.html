@@ -49,6 +49,17 @@
                     <li><a href="#" id="nav-about">关于计划</a></li>
                 </ul>
             </nav>
+
+            <!-- === 音乐控制 (放入 header 以解决遮挡与点击问题) === -->
+            <div class="music-control">
+                <button id="music-toggle" class="music-btn" title="播放/暂停背景音乐">
+                    <span class="music-icon">🎵</span>
+                    <span class="music-text">S T A Y</span>
+                    <div class="music-waves" id="music-waves">
+                        <span></span><span></span><span></span><span></span>
+                    </div>
+                </button>
+            </div>
         </header>
 
         <!-- 悬停信息面板 -->
@@ -101,13 +112,14 @@
                         <ul>
                             <li><span class="tech-dot"></span> <strong>THREE.JS / WEBGL</strong> - 构建高性能的物理硬件加速 3D 图形引擎</li>
                             <li><span class="tech-dot"></span> <strong>GSAP (GreenSock)</strong> - 控制摄像机与界面的电影级丝滑转场动画</li>
-                            <li><span class="tech-dot"></span> <strong>VANILLA CSS</strong> - 零依赖，通过高级 Glassmorphism (毛玻璃) 滤镜风格构建沉浸式沉浸界面</li>
+                            <li><span class="tech-dot"></span> <strong>VANILLA CSS</strong> - 采用高级 Glassmorphism 滤镜构建沉浸式界面</li>
+                            <li><span class="tech-dot"></span> <strong>OST - STAY</strong> - 采用 Hans Zimmer 的经典配乐，赋予宇宙更深邃的情感</li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <!-- 底部提示 -->
         <div class="cursor-hint">
             <span class="mouse-icon">🖱️</span> 拖拽旋转视角 | 滚轮进行缩放 | 悬停查看星球特性
