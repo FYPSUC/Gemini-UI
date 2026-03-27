@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmos Explorer - 浩瀚宇宙</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="ui.css">
+    
+    <!-- 引入 Google Fonts 提升质感 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- Import map for Three.js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+    <!-- WebGL Canvas 容器 -->
+    <div id="canvas-container"></div>
+    
+    <!-- === 快速深空跃迁菜单 === -->
+    <div class="warp-menu">
+        <div class="warp-title">✦ 坐标跃迁引擎</div>
+        <button class="warp-btn" data-target="earth">太阳系 [Solar]</button>
+        <button class="warp-btn" data-target="blackhole">超大质量黑洞 [Gargantua]</button>
+        <button class="warp-btn" data-target="pulsar">脉冲双星流放地 [TDE Binary]</button>
+        <button class="warp-btn" data-target="andromeda">仙女座旋涡星系 [M31 Galaxy]</button>
+        <button class="warp-btn" data-target="milkyway">银河系溯源点 [Milky Way]</button>
+        <button class="warp-btn" data-target="sombrero">草帽星系 [M104 Sombrero]</button>
+    </div>
+    
+    <!-- UI 叠加层 -->
+    <div id="ui-container">
+        <!-- 顶部导航栏 -->
+        <header>
+            <div class="logo">COSMOS<span>.</span></div>
+            <nav>
+                <ul>
+                    <li><a href="#" id="nav-explore" class="active">探索</a></li>
+                    <li><a href="#" id="nav-gallery">星系图鉴</a></li>
+                    <li><a href="#" id="nav-about">关于计划</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- 悬停信息面板 -->
+        <div id="info-panel" class="hidden">
+            <div class="panel-header">
+                <span class="sector">SECTOR-01</span>
+                <div class="status-dot"></div>
+            </div>
+            <h2 id="planet-name">星球名称</h2>
+            <div class="divider"></div>
+            <p id="planet-desc">星球描述信息...</p>
+            
+            <div class="stats">
+                <div class="stat">
+                    <span class="label">质量 (Mass)</span>
+                    <span class="value" id="planet-mass">--</span>
+                </div>
+                <div class="stat">
+                    <span class="label">重力 (Gravity)</span>
+                    <span class="value" id="planet-gravity">--</span>
+                </div>
+            </div>
+            
+            <button class="explore-btn">
+                <span class="btn-text">点击锁定视角</span>
+                <span class="btn-icon">→</span>
+            </button>
+        </div>
+        
+        <!-- === 新增：星系图鉴面板 === -->
+        <div id="gallery-panel" class="overlay-panel hidden">
+            <div class="panel-content">
+                <h2>星系图鉴 <span>ATLAS</span></h2>
+                <button class="close-btn">✖</button>
+                <div class="gallery-grid" id="gallery-grid">
+                    <!-- 通过 JS 动态生成卡片 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- === 新增：关于计划面板 === -->
+        <div id="about-panel" class="overlay-panel hidden">
+            <div class="panel-content">
+                <h2>关于计划 <span>PROJECT COSMOS</span></h2>
+                <button class="close-btn">✖</button>
+                <div class="about-text">
+                    <p><strong>COSMOS EXPLORER</strong> 是一项使用前沿 WebGL / HTML5 技术的高级交互空间。我们将浩瀚无垠的星空缩放于屏幕之中，赋予冷硬的数据以生命与温度。这是一个纯粹展示宇宙美学与现代浏览器渲染技术的独立项目。</p>
+                    <div class="tech-stack">
+                        <h3>核心驱动技术</h3>
+                        <ul>
+                            <li><span class="tech-dot"></span> <strong>THREE.JS / WEBGL</strong> - 构建高性能的物理硬件加速 3D 图形引擎</li>
+                            <li><span class="tech-dot"></span> <strong>GSAP (GreenSock)</strong> - 控制摄像机与界面的电影级丝滑转场动画</li>
+                            <li><span class="tech-dot"></span> <strong>VANILLA CSS</strong> - 零依赖，通过高级 Glassmorphism (毛玻璃) 滤镜风格构建沉浸式沉浸界面</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部提示 -->
+        <div class="cursor-hint">
+            <span class="mouse-icon">🖱️</span> 拖拽旋转视角 | 滚轮进行缩放 | 悬停查看星球特性
+        </div>
+    </div>
+
+    <!-- 引入 GSAP 动画库，用于制作极致平滑的 UI 与摄像机动画 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script type="module" src="main.js"></script>
+</body>
+</html>

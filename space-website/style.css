@@ -1,0 +1,323 @@
+:root {
+    --primary-color: #00e5ff;
+    --primary-glow: rgba(0, 229, 255, 0.6);
+    --secondary-color: #b05cff;
+    --text-color: #ffffff;
+    --bg-overlay: rgba(5, 5, 10, 0.4);
+    --panel-bg: rgba(10, 15, 25, 0.55);
+    --panel-border: rgba(255, 255, 255, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #030303;
+    color: var(--text-color);
+    font-family: 'Noto Sans SC', sans-serif;
+    overflow: hidden; /* 防止因为canvas溢出而出现滚动条 */
+    width: 100vw;
+    height: 100vh;
+    cursor: crosshair;
+    user-select: none;
+}
+
+/* Three.js 容器 */
+#canvas-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* UI 容器，拦截并分发鼠标事件 */
+#ui-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none; /* 让大部分点击穿透给 canvas 控制器 */
+    display: flex;
+    flex-direction: column;
+}
+
+/* 顶部导航，未来感全开 */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2.5rem 5rem;
+    pointer-events: auto;
+    background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+}
+
+.logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 900;
+    letter-spacing: 0.4rem;
+    text-transform: uppercase;
+    text-shadow: 0 0 15px var(--primary-glow);
+}
+
+.logo span {
+    color: var(--primary-color);
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 4rem;
+}
+
+nav a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 0.95rem;
+    letter-spacing: 0.15rem;
+    text-transform: uppercase;
+    transition: all 0.4s ease;
+    padding-bottom: 5px;
+    position: relative;
+}
+
+nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 1px;
+    background: var(--primary-color);
+    box-shadow: 0 0 10px var(--primary-color);
+    transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+nav a:hover, nav a.active {
+    color: #fff;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+}
+
+nav a:hover::after, nav a.active::after {
+    width: 100%;
+}
+
+/* 星球信息面板 - 毛玻璃拟态感 (Glassmorphism) */
+#info-panel {
+    position: absolute;
+    top: 50%;
+    right: 5%;
+    transform: translateY(-50%);
+    width: 380px;
+    background: var(--panel-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--panel-border);
+    border-radius: 20px;
+    padding: 2.5rem;
+    pointer-events: auto;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* 用GSAP接管所以不再需要纯CSS的transition */
+#info-panel.hidden {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.sector {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    color: var(--primary-color);
+    letter-spacing: 0.2rem;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    box-shadow: 0 0 10px var(--primary-color);
+    animation: blink 2s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+#planet-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+.divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, var(--primary-color) 0%, transparent 100%);
+    margin-bottom: 1.5rem;
+    opacity: 0.5;
+}
+
+#planet-desc {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 2rem;
+    font-weight: 300;
+}
+
+.stats {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+}
+
+.stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background 0.3s;
+}
+
+.stat:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.stat .label {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+}
+
+.stat .value {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+/* 按钮设计 */
+.explore-btn {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: rgba(0, 229, 255, 0.1);
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.1rem;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.explore-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--primary-color);
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    z-index: -1;
+}
+
+.explore-btn:hover {
+    color: #000;
+    box-shadow: 0 0 25px var(--primary-glow);
+    transform: translateY(-2px);
+}
+
+.explore-btn:hover::before {
+    left: 0;
+}
+
+.btn-icon {
+    font-size: 1.2rem;
+    transition: transform 0.3s;
+}
+
+.explore-btn:hover .btn-icon {
+    transform: translateX(5px);
+}
+
+/* 底部操作提示 */
+.cursor-hint {
+    position: absolute;
+    bottom: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.85rem;
+    letter-spacing: 0.15rem;
+    color: rgba(255, 255, 255, 0.4);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0,0,0,0.5);
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.mouse-icon {
+    font-size: 1.1rem;
+    animation: float 2s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+/* 处理小屏幕的响应式 */
+@media (max-width: 768px) {
+    header {
+        padding: 1.5rem 2rem;
+    }
+    nav {
+        display: none; /* 移动端暂时隐藏菜单 */
+    }
+    #info-panel {
+        width: 90%;
+        right: 5%;
+        bottom: 5%;
+        top: auto;
+        transform: translateY(0);
+    }
+}
